@@ -15,8 +15,8 @@ DATA_DIR = BASE_DIR / "data"
 UPLOADS_DIR = DATA_DIR / "uploads"
 VECTOR_STORE_DIR = DATA_DIR / "vector_store"
 
-# Default KB source PDF path
-DEFAULT_KB_SOURCE = Path(r"C:\Users\sakth\Downloads\ecommerce_chatbot_kb.pdf")
+# Default KB source PDF path — look in project root (works cross-platform)
+DEFAULT_KB_SOURCE = BASE_DIR.parent / "ecommerce_chatbot_kb.pdf"
 DEFAULT_KB_DEST = UPLOADS_DIR / "ecommerce_chatbot_kb.pdf"
 
 # Ensure required directories exist

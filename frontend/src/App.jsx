@@ -26,6 +26,7 @@ export default function App() {
   const [messages, setMessages] = useState([INITIAL_WELCOME_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [isApiConfigured, setIsApiConfigured] = useState(true);
   const [documents, setDocuments] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -46,11 +47,13 @@ export default function App() {
     try {
       const health = await fetchHealth();
       setIsOnline(health.status === 'ok');
+      setIsApiConfigured(health.groq_api_configured === true);
       const docsRes = await fetchDocuments();
       setDocuments(docsRes.documents || []);
     } catch (err) {
       console.error('Failed to load initial backend status:', err);
       setIsOnline(false);
+      setIsApiConfigured(false);
     }
   };
 
@@ -108,7 +111,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 text-slate-900 overflow-hidden">
+    <div className="flex flex-col h-screen bg-black text-slate-100 overflow-hidden">
       
       {/* Header */}
       <ChatHeader
@@ -116,12 +119,27 @@ export default function App() {
         onToggleSidebar={() => setIsSidebarOpen(true)}
         documentCount={documents.length}
         isOnline={isOnline}
+        isApiConfigured={isApiConfigured}
       />
 
       {/* Main Chat View */}
       <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
         <div className="max-w-4xl mx-auto space-y-4">
           
+          {/* API Key Warning Banner */}
+          {!isApiConfigured && (
+            <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 mb-4 flex items-start space-x-3 shadow-sm">
+              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-amber-800">Groq API Key Not Configured</p>
+                <p className="text-xs text-amber-700 mt-0.5">
+                  The backend cannot reach the Groq LLM. Please add your <code className="bg-amber-100 px-1 rounded font-mono">GROQ_API_KEY</code> to the{' '}
+                  <code className="bg-amber-100 px-1 rounded font-mono">backend/.env</code> file and restart the server.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Welcome Banner Card */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-5 text-white shadow-md mb-6">
             <div className="flex items-start justify-between">
@@ -149,14 +167,14 @@ export default function App() {
           {/* Typing / Loading Indicator */}
           {isLoading && (
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-white shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-white shadow-sm border border-zinc-700">
                 <Bot className="w-4.5 h-4.5 text-blue-400" />
               </div>
-              <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center space-x-1.5">
-                <span className="text-xs font-medium text-slate-500 mr-1">Synthesizing answer...</span>
-                <span className="w-2 h-2 bg-blue-600 rounded-full animate-typing-1"></span>
-                <span className="w-2 h-2 bg-blue-600 rounded-full animate-typing-2"></span>
-                <span className="w-2 h-2 bg-blue-600 rounded-full animate-typing-3"></span>
+              <div className="bg-zinc-900 border border-zinc-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm flex items-center space-x-1.5 text-zinc-300">
+                <span className="text-xs font-medium text-zinc-400 mr-1">Synthesizing answer...</span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-typing-1"></span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-typing-2"></span>
+                <span className="w-2 h-2 bg-blue-500 rounded-full animate-typing-3"></span>
               </div>
             </div>
           )}

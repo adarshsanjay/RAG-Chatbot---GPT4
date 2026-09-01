@@ -56,19 +56,19 @@ export default function DocumentUpload({ isOpen, onClose, documents, onDocuments
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-sm transition-opacity">
-      <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-200">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm transition-opacity">
+      <div className="w-full max-w-md bg-zinc-950 text-zinc-100 h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-200 border-l border-zinc-800">
         
         {/* Header */}
         <div>
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-900">
             <div className="flex items-center space-x-2">
-              <Database className="w-5 h-5 text-blue-600" />
-              <h2 className="font-bold text-slate-800 text-base">Knowledge Base Manager</h2>
+              <Database className="w-5 h-5 text-blue-500" />
+              <h2 className="font-bold text-white text-base">Knowledge Base Manager</h2>
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition"
+              className="p-1 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition"
             >
               <X className="w-5 h-5" />
             </button>
@@ -78,24 +78,24 @@ export default function DocumentUpload({ isOpen, onClose, documents, onDocuments
             
             {/* Status & Error Alerts */}
             {statusMsg && (
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 flex items-start space-x-2 text-xs text-emerald-800">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div className="p-3 rounded-lg bg-emerald-950/50 border border-emerald-800 flex items-start space-x-2 text-xs text-emerald-300">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <span>{statusMsg}</span>
               </div>
             )}
 
             {errorMsg && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 flex items-start space-x-2 text-xs text-red-800">
-                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="p-3 rounded-lg bg-red-950/50 border border-red-800 flex items-start space-x-2 text-xs text-red-300">
+                <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             {/* Upload Drag/Drop Box */}
-            <div className="border-2 border-dashed border-blue-200 hover:border-blue-500 rounded-xl p-6 text-center bg-blue-50/40 transition">
-              <FileUp className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-slate-700">Upload New PDF Document</p>
-              <p className="text-xs text-slate-500 mt-1 mb-3">Add product specs, policy updates, or extra store FAQs.</p>
+            <div className="border-2 border-dashed border-zinc-700 hover:border-blue-500 rounded-xl p-6 text-center bg-zinc-900/50 transition">
+              <FileUp className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+              <p className="text-sm font-semibold text-zinc-200">Upload New PDF Document</p>
+              <p className="text-xs text-zinc-400 mt-1 mb-3">Add product specs, policy updates, or extra store FAQs.</p>
               
               <label className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow cursor-pointer transition">
                 <FileUp className="w-4 h-4" />
@@ -112,12 +112,12 @@ export default function DocumentUpload({ isOpen, onClose, documents, onDocuments
 
             {/* Document Listing */}
             <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+              <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                 Indexed Documents ({documents.length})
               </h3>
 
               {documents.length === 0 ? (
-                <p className="text-xs text-slate-400 italic py-3 text-center border border-dashed border-slate-200 rounded-lg">
+                <p className="text-xs text-zinc-500 italic py-3 text-center border border-dashed border-zinc-800 rounded-lg">
                   No documents indexed yet.
                 </p>
               ) : (
@@ -125,20 +125,20 @@ export default function DocumentUpload({ isOpen, onClose, documents, onDocuments
                   {documents.map((doc, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between"
+                      className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-3 overflow-hidden">
-                        <div className="p-2 rounded bg-blue-100 text-blue-700">
+                        <div className="p-2 rounded bg-zinc-800 text-blue-400">
                           <FileText className="w-4 h-4" />
                         </div>
                         <div className="truncate">
-                          <p className="text-xs font-semibold text-slate-800 truncate">{doc.filename}</p>
-                          <p className="text-[11px] text-slate-500">
+                          <p className="text-xs font-semibold text-zinc-200 truncate">{doc.filename}</p>
+                          <p className="text-[11px] text-zinc-400">
                             {doc.total_pages} pages • {doc.total_chunks} vector chunks
                           </p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold">
+                      <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded font-semibold">
                         Indexed
                       </span>
                     </div>
@@ -151,11 +151,11 @@ export default function DocumentUpload({ isOpen, onClose, documents, onDocuments
         </div>
 
         {/* Footer: Reset Button */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="p-4 border-t border-zinc-800 bg-zinc-900">
           <button
             onClick={handleResetIndex}
             disabled={resetting}
-            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-white hover:bg-red-50 text-red-600 border border-red-200 transition disabled:opacity-50"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-zinc-950 hover:bg-red-950/40 text-red-400 border border-zinc-800 hover:border-red-800 transition disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${resetting ? 'animate-spin' : ''}`} />
             <span>{resetting ? 'Resetting Index...' : 'Reset Vector Index to Default'}</span>

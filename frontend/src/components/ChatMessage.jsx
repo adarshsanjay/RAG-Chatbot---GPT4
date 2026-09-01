@@ -32,7 +32,7 @@ function renderFormattedContent(content) {
 
     const formattedLine = parts.map((part, partIdx) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={partIdx} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+        return <strong key={partIdx} className="font-semibold text-white">{part.slice(2, -2)}</strong>;
       }
       return part;
     });
@@ -65,7 +65,7 @@ export default function ChatMessage({ message }) {
           <div className={`rounded-2xl px-4 py-3 text-sm shadow-sm ${
             isUser
               ? 'bg-blue-600 text-white rounded-tr-none'
-              : 'bg-white text-slate-800 border border-slate-200/80 rounded-tl-none'
+              : 'bg-zinc-900 text-zinc-100 border border-zinc-800 rounded-tl-none'
           }`}>
             
             {/* Main Content */}
@@ -87,7 +87,7 @@ export default function ChatMessage({ message }) {
             {!isUser && message.intent && (
               <>
                 <span>•</span>
-                <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
+                <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-md font-medium bg-zinc-800 text-blue-400 border border-zinc-700">
                   <Tag className="w-3 h-3 text-blue-500" />
                   <span>Intent: {INTENT_LABELS[message.intent] || message.intent}</span>
                 </span>

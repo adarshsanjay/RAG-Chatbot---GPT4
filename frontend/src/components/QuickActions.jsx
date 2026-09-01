@@ -18,9 +18,9 @@ export default function QuickActions({ onSelectQuery, disabled }) {
             key={idx}
             onClick={() => onSelectQuery(action.query)}
             disabled={disabled}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white text-slate-700 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 shadow-sm transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-900 text-zinc-300 hover:text-white hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 shadow-sm transition whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Icon className="w-3.5 h-3.5 text-blue-600" />
+            <Icon className="w-3.5 h-3.5 text-blue-400" />
             <span>{action.label}</span>
           </button>
         );

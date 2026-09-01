@@ -20,7 +20,7 @@ export default function ChatInput({ onSendMessage, isLoading, onSelectQuickQuery
   };
 
   return (
-    <div className="bg-white border-t border-slate-200 px-4 py-3 sm:px-6 sticky bottom-0 z-10 shadow-lg">
+    <div className="bg-black border-t border-zinc-800 px-4 py-3 sm:px-6 sticky bottom-0 z-10 shadow-lg">
       <div className="max-w-4xl mx-auto space-y-2">
         
         {/* Quick Action Presets */}
@@ -41,7 +41,7 @@ export default function ChatInput({ onSendMessage, isLoading, onSelectQuickQuery
               onKeyDown={handleKeyDown}
               placeholder="Ask a question about products, orders, shipping, or returns..."
               disabled={isLoading}
-              className="w-full resize-none rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition disabled:bg-slate-100 disabled:cursor-not-allowed shadow-inner"
+              className="w-full resize-none rounded-xl border border-zinc-700 bg-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none transition disabled:bg-zinc-800 disabled:cursor-not-allowed shadow-inner"
             />
           </div>
 

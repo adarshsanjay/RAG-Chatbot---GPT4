@@ -38,8 +38,18 @@ class GroqService:
             formatted_messages.append({"role": "system", "content": system_prompt})
         formatted_messages.extend(messages)
 
-        candidate_models = [self.model, "qwen/qwen3.6-27b", "groq/compound-mini", "openai/gpt-oss-20b", "llama-3.3-70b-versatile"]
-        # Deduplicate preserving order
+        # Priority list: standard chat models first (no think tags), reasoning models as fallback
+        # Only models confirmed available on this Groq account
+        candidate_models = [
+            self.model,
+            "openai/gpt-oss-20b",
+            "openai/gpt-oss-120b",
+            "groq/compound",
+            "groq/compound-mini",
+            "qwen/qwen3.8-27b",
+            "qwen/qwen3.6-27b",
+        ]
+        # Deduplicate preserving order, skip empty values
         candidate_models = list(dict.fromkeys([m for m in candidate_models if m]))
 
         last_error = None
@@ -51,16 +61,60 @@ class GroqService:
                     temperature=temperature,
                     max_tokens=max_tokens,
                 )
-                raw_content = response.choices[0].message.content.strip()
-                # Strip internal reasoning/thinking tags if present
-                clean_content = re.sub(r'<think>.*?</think>', '', raw_content, flags=re.DOTALL).strip()
-                return clean_content
+                choice = response.choices[0]
+                raw_content = (choice.message.content or "").strip()
+
+                clean_content = self._strip_think_tags(raw_content)
+
+                # If stripping produced empty string, the whole answer was inside <think>
+                # Try to extract the final answer section from within
+                if not clean_content and raw_content:
+                    clean_content = self._extract_answer_from_think(raw_content)
+
+                if clean_content:
+                    logger.info(f"Got answer from model '{target_model}' ({len(clean_content)} chars)")
+                    return clean_content
+
+                # If still empty, try next model
+                logger.warning(f"Model '{target_model}' returned empty content after processing. Trying next.")
             except Exception as e:
                 last_error = e
                 logger.warning(f"Error calling Groq API model '{target_model}': {e}. Retrying with fallback model...")
 
         logger.error(f"All Groq models failed: {last_error}")
         return f"Error communicating with Groq API: {str(last_error)}"
+
+    def _strip_think_tags(self, text: str) -> str:
+        """Remove <think>...</think> blocks, keeping only text AFTER them."""
+        # Remove closed think blocks entirely
+        result = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+        # Remove unclosed think blocks (from <think> to end of string)
+        result = re.sub(r'<think>.*$', '', result, flags=re.DOTALL)
+        return result.strip()
+
+    def _extract_answer_from_think(self, text: str) -> str:
+        """
+        When the entire response is inside <think> tags (qwen-style reasoning models),
+        extract a clean final answer from the last substantive paragraph inside the block.
+        """
+        # Pull the content inside <think>
+        match = re.search(r'<think>(.*?)(?:</think>|$)', text, flags=re.DOTALL)
+        inner = match.group(1).strip() if match else text.strip()
+
+        # Look for explicit 'Final Answer:' or 'Answer:' section markers
+        final_match = re.search(
+            r'(?:Final Answer|Final Response|Final Draft|Draft):\s*(.*)',
+            inner, flags=re.DOTALL | re.IGNORECASE
+        )
+        if final_match:
+            return final_match.group(1).strip()
+
+        # Otherwise take the last non-empty paragraph (usually the answer draft)
+        paragraphs = [p.strip() for p in re.split(r'\n{2,}', inner) if p.strip()]
+        if paragraphs:
+            return paragraphs[-1]
+
+        return inner
 
     def _fallback_answer(self, messages: List[Dict[str, str]], system_prompt: Optional[str]) -> str:
         last_message = messages[-1]["content"] if messages else ""
